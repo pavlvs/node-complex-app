@@ -1,0 +1,24 @@
+{
+  "name": "complex-app",
+  "version": "1.0.0",
+  "description": "Udemy Full Stack Javascript course",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavlvs/complex-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pavlvs/complex-app/issues"
+  },
+  "homepage": "https://github.com/pavlvs/complex-app#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4"
+  }
+}
