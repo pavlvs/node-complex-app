@@ -1,19 +1,19 @@
 const usersCollection = require('../db').collection('users')
 const validator = require('validator')
 
-let User = function (data) {
+let User = function(data) {
     this.data = data
     this.errors = []
 }
 
-User.prototype.cleanUp = function () {
-    if (typeof (this.data.username) != 'string') {
+User.prototype.cleanUp = function() {
+    if (typeof this.data.username != 'string') {
         this.data.username = ''
     }
-    if (typeof (this.data.email) != 'string') {
+    if (typeof this.data.email != 'string') {
         this.data.email = ''
     }
-    if (typeof (this.data.password) != 'string') {
+    if (typeof this.data.password != 'string') {
         this.data.password = ''
     }
 
@@ -25,7 +25,7 @@ User.prototype.cleanUp = function () {
     }
 }
 
-User.prototype.validate = function () {
+User.prototype.validate = function() {
     if (this.data.username == '') {
         this.errors.push('You must provide a username')
     }
@@ -52,7 +52,25 @@ User.prototype.validate = function () {
     }
 }
 
-User.prototype.register = function () {
+User.prototype.login = function() {
+    return new Promise((resolve, reject) => {
+        this.cleanUp()
+        usersCollection
+            .findOne({ username: this.data.username })
+            .then((attemptedUser) => {
+                if (attemptedUser && attemptedUser.password == this.data.password) {
+                    resolve('Congrats!')
+                } else {
+                    reject('Invalid username or password')
+                }
+            })
+            .catch(function() {
+                reject('Please try again later.')
+            })
+    })
+}
+
+User.prototype.register = function() {
     // Step  #1: Validate user data
     this.cleanUp()
     this.validate()
