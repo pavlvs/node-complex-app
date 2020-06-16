@@ -6,20 +6,22 @@ exports.login = function(req, res) {
         .login()
         .then(function(result) {
             req.session.user = { username: user.data.username }
-            req.session.save(function () {
+            req.session.save(function() {
                 res.redirect('/')
             })
         })
         .catch(function(e) {
-            res.send(e)
+            req.flash('errors', e)
+            req.session.save(function() {
+                res.redirect('/')
+            })
         })
 }
 
 exports.logout = function(req, res) {
-    req.session.destroy(function () {
+    req.session.destroy(function() {
         res.redirect('/')
     })
-    
 }
 
 exports.register = function(req, res) {
@@ -38,6 +40,6 @@ exports.home = function(req, res) {
             username: req.session.user.username
         })
     } else {
-        res.render('home-guest')
+        res.render('home-guest', { errors: req.flash('errors') })
     }
 }
