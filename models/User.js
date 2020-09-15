@@ -87,12 +87,18 @@ User.prototype.login = function () {
         usersCollection
             .findOne({ username: this.data.username })
             .then((attemptedUser) => {
-                if (attemptedUser && bcrypt.compareSync(this.data.password, attemptedUser.password)) {
-                    this.data = attemptedUser
-                    this.getAvatar()
-                    resolve('Congrats!')
+                if (
+                    attemptedUser &&
+                    bcrypt.compareSync(
+                        this.data.password,
+                        attemptedUser.password
+                    )
+                ) {
+                    this.data = attemptedUser;
+                    this.getAvatar();
+                    resolve('Congrats!');
                 } else {
-                    reject('Invalid username or password')
+                    reject('Invalid username or password');
                 }
             })
             .catch(function () {
@@ -122,6 +128,30 @@ User.prototype.register = function () {
 
 User.prototype.getAvatar = function () {
     this.avatar = `http://gravatar.com/avatar/${md5(this.data.email)}?s=128`
+}
+
+User.findByUsername = function (username) {
+    return new Promise(function (resolve, reject) {
+        if (typeof (username) != 'string') {
+            reject()
+            return
+        }
+        usersCollection.findOne({ username: username }).then(function (userDoc) {
+            if (userDoc) {
+                userDoc = new User(userDoc, true)
+                userDoc = {
+                    _id: userDoc.data._id,
+                    username: userDoc.data.username,
+                    avatar: userDoc.avatar
+                }
+                resolve(userDoc)
+            } else {
+                reject()
+            }
+        }).catch(function () {
+            reject()
+        })
+    })
 }
 
 module.exports = User

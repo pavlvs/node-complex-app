@@ -58,25 +58,33 @@ Post.findSingleById = function (id) {
             reject()
             return
         }
-        let posts = await postsCollection.aggregate([
-            { $match: { _id: new ObjectID(id) } },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'author',
-                    foreignField: '_id',
-                    as: 'authorDocument'
-                }
-            },
-            {
-                $project: {
-                    title: 1,
-                    body: 1,
-                    createdDate: 1,
-                    author: { $arrayElemAt: ['$authorDocument', 0] }
-                }
-            }
-        ]).toArray()
+        let posts = await postsCollection
+            .aggregate([
+                {
+                    $match: {
+                        _id: new ObjectID(id),
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'author',
+                        foreignField: '_id',
+                        as: 'authorDocument',
+                    },
+                },
+                {
+                    $project: {
+                        title: 1,
+                        body: 1,
+                        createdDate: 1,
+                        author: {
+                             $arrayElemAt: ['$authorDocument', 0]
+                            },
+                    },
+                },
+            ])
+            .toArray();
         // clean up author property in each post
         posts = posts.map(function (post) {
             post.author = {
