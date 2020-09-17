@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "watch": "nodemon db",
+    "watch": "concurrently \"nodemon db --ignore frontend-js --ignore public/\"  \"webpack --watch\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,6 +17,7 @@
     "axios": "^0.19.1",
     "babel-loader": "^8.0.6",
     "bcryptjs": "^2.4.3",
+    "concurrently": "^5.3.0",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^3.2.0",
     "cors": "^2.8.5",
