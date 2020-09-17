@@ -102,6 +102,25 @@ Post.prototype.performUpdate = function () {
     })
 }
 
+Post.delete = function (postIdToDelete, currentUserId) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let post = await Post.findSingleById(postIdToDelete, currentUserId)
+            if (post.isVisitorOwner) {
+                // delete the db post
+                await postsCollection.deleteOne({
+                    _id: new ObjectID(postIdToDelete)
+                })
+                resolve()
+            } else {
+                reject()
+            }
+        } catch {
+            reject()
+        }
+    })
+}
+
 Post.reusablePostQuery = function (uniqueOperations, visitorId) {
     return new Promise(async function (resolve, reject) {
         let aggOperations = uniqueOperations.concat([
