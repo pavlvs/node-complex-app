@@ -1,6 +1,8 @@
 <%- include ('includes/header.ejs') %>
 
 <div class="container py-md-5 container--narrow">
+    <%- include('includes/flash') %>
+
     <form action="/create-post" method="POST">
         <div class="form-group">
             <label for="post-title"
