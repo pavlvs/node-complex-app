@@ -32,11 +32,16 @@ export default class Search {
     // 3. Methods
     keyPressHandler() {
         let value = this.inputField.value
-
+        if (value == '') {
+            clearTimeout(this.typingTimer)
+            this.hideLoaderIcon()
+            this.hideResultsArea()
+        }
 
         if (value != '' && value != this.previousValue) {
             clearTimeout(this.typingTimer)
             this.showLoaderIcon()
+            this.hideResultsArea()
             this.typingTimer = setTimeout(() => {
                 this.sendRequest()
             }, 750);
@@ -49,13 +54,51 @@ export default class Search {
             searchTerm: this.inputField.value
         }).then(response => {
             console.log(response.data)
+            this.renderResultsHTML(response.data)
         }).catch(() => {
             console.log('tora, tora')
         })
     }
 
+    renderResultsHTML(posts) {
+        if (posts.length) {
+            this.resultsArea.innerHTML = `
+            <div class="list-group shadow-sm">
+                <div class="list-group-item active"><strong>Search Results</strong> (${posts.length != 1 ? posts.length + ' items found' : ' 1 item found'})</div>
+                ${posts.map(post => {
+                let postDate = new Date(post.createdDate)
+                return `
+                    <a href="/post/${post._id}" class="list-group-item list-group-item-action">
+                    <img class="avatar-tiny" src="${post.author.avatar}"> <strong>${post.title}</strong>
+                    <span class="text-muted small">by ${post.author.username} on ${postDate.getMonth() + 1}/${postDate.getDate()}/${postDate.getFullYear()}</span>
+                    </a>
+                    `
+            }).join('')}
+                </div>
+            `
+        } else {
+            this.resultsArea.innerHTML = `
+            <p class="alert alert-danger text-center shadow-sm" >Sorry. No search results for that search term</p>
+            `
+        }
+        this.hideLoaderIcon()
+        this.showResultsArea()
+    }
+
     showLoaderIcon() {
         this.loaderIcon.classList.add('circle-loader--visible')
+    }
+
+    hideLoaderIcon() {
+        this.loaderIcon.classList.remove('circle-loader--visible')
+    }
+
+    showResultsArea() {
+        this.resultsArea.classList.add('live-search-results--visible')
+    }
+
+    hideResultsArea() {
+        this.resultsArea.classList.remove('live-search-results--visible')
     }
 
     openOverlay() {
@@ -81,28 +124,7 @@ export default class Search {
                 <div class="search-overlay-bottom">
                 <div class="container container--narrow py-3">
                     <div class="circle-loader"></div>
-                    <div class="live-search-results">
-                    <div class="list-group shadow-sm">
-                        <div class="list-group-item active"><strong>Search Results</strong> (4 items found)</div>
-
-                        <a href="#" class="list-group-item list-group-item-action">
-                        <img class="avatar-tiny" src="https://gravatar.com/avatar/b9216295c1e3931655bae6574ac0e4c2?s=128"> <strong>Example Post #1</strong>
-                        <span class="text-muted small">by barksalot on 0/14/2019</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                        <img class="avatar-tiny" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"> <strong>Example Post #2</strong>
-                        <span class="text-muted small">by brad on 0/12/2019</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                        <img class="avatar-tiny" src="https://gravatar.com/avatar/b9216295c1e3931655bae6574ac0e4c2?s=128"> <strong>Example Post #3</strong>
-                        <span class="text-muted small">by barksalot on 0/14/2019</span>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                        <img class="avatar-tiny" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"> <strong>Example Post #4</strong>
-                        <span class="text-muted small">by brad on 0/12/2019</span>
-                        </a>
-                    </div>
-                    </div>
+                    <div class="live-search-results"></div>
                 </div>
                 </div>
             </div>
