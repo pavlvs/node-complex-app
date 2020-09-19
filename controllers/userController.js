@@ -128,7 +128,8 @@ exports.profilePostsScreen = function (req, res) {
                 postsCount: req.postsCount,
                 followersCount: req.followersCount,
                 followedUsersCount: req.followedUsersCount
-            }
+            },
+            title: `Profile for: ${req.profileUser.username}`,
     })
     }).catch(function () {
         res.render('404')
