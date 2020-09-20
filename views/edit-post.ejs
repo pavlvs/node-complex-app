@@ -17,6 +17,7 @@
                 type="text"><%= post.body %></textarea>
         </div>
 
+        <input type="hidden" name="_csrf" id="" value="<%= csrfToken %>">
         <button class="btn btn-primary">Update</button>
     </form>
 </div>

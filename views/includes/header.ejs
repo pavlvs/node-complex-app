@@ -42,6 +42,7 @@
                     href="/create-post">Create
                     Post</a>
                 <form action="/logout" method="POST" class="d-inline">
+                    <input type="hidden" name="_csrf" id="" value="<%= csrfToken %>">
                     <button class="btn btn-sm btn-secondary">Sign Out</button>
                 </form>
             </div>
@@ -59,7 +60,8 @@
                             class="form-control form-control-sm input-dark"
                             type="password" placeholder="Password" />
                     </div>
-                    <div class="col-md-auto">
+                        <div class="col-md-auto">
+                        <input type="hidden" name="_csrf" id="" value="<%= csrfToken %>">
                         <button class="btn btn-primary btn-sm">Sign In</button>
                     </div>
                 </div>

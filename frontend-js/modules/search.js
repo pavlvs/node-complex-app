@@ -4,6 +4,7 @@ export default class Search {
     // 1. select DOM elements
     constructor() {
         this.injectHTML()
+        this._csrf = document.querySelector('[name="_csrf"]').value
         this.headerSearchIcon = document.querySelector('.header-search-icon')
         this.overlay = document.querySelector('.search-overlay')
         this.closeIcon = document.querySelector('.close-live-search')
@@ -52,6 +53,7 @@ export default class Search {
 
     sendRequest() {
         axios.post('/search', {
+            _csrf: this._csrf,
             searchTerm: this.inputField.value
         }).then(response => {
             console.log(response.data)
